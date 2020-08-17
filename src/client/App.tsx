@@ -3,6 +3,7 @@ import * as React from 'react';
 const App = (props: AppProps) => {
 	const [users, setUsers] = React.useState<{ id: number; email: string; created_at: Date }[]>([]);
 	const [email, setEmail] = React.useState<string>('');
+	const [count, setCount] = React.useState<number>(0);
 
 	const getUsers = React.useCallback(async () => {
 		const res = await fetch('/api/users');
@@ -10,8 +11,15 @@ const App = (props: AppProps) => {
 		setUsers(users);
 	}, []);
 
+	const getCount = React.useCallback(async () => {
+		const res = await fetch('/api/users/count');
+		const pizza = await res.json();
+		setCount(pizza.count);
+	}, []);
+
 	React.useEffect(() => {
 		getUsers();
+		getCount();
 	}, [getUsers]);
 
 	const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -27,6 +35,7 @@ const App = (props: AppProps) => {
 			const result = await res.json();
 			console.log(result);
 			getUsers();
+			getCount();
 		}
 		setEmail('');
 	};
@@ -36,7 +45,7 @@ const App = (props: AppProps) => {
 			<section className="row justify-content-center mt-5">
 				<div className="col-10 text-center">
 					<h1 className="display-1">Join Our Cult Today!</h1>
-					<p className="text-muted">Just look at all these saps .. I mean users!</p>
+					<p className="text-muted">Just look at all {count} saps .. I mean users!</p>
 				</div>
 				<div className="col-md-5">
 					<form className="form-group p-3">
