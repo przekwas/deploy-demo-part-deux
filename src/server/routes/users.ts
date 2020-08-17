@@ -13,4 +13,15 @@ router.get('/', async (req, res, next) => {
     }
 });
 
+router.post('/', async (req, res, next) => {
+    const newUser = req.body;
+    try {
+        const { insertId: id } = await db.users.insert(newUser.email);
+        res.json({ id, msg: 'user registered like an idiot lol' });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: 'i suck lol', error });
+    }
+});
+
 export default router;
